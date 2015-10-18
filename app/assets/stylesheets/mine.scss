@@ -1,0 +1,6 @@
+@import "kube.min";
+
+page { display: block; @extend row}
+
+main { @extend column[cols='4'] }
+aside { @extend column[cols='8'] }

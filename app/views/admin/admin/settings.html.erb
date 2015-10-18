@@ -1,0 +1,122 @@
+<div class="row">
+	<div class="c3 col">
+		<ul class="tabs vertical">
+			<li class="selected" data-target="#branding">Branding</li>
+			<li class="" data-target="#groups">Groups</li>
+			<li class="" data-target="#security">Security</li>
+			<li class="" data-target="#dashboard">My Dashboard</li>
+			<li class="" data-target="#reports">My Reports</li>
+		</ul>
+	</div>
+	<div class="c9 col">
+		<div class="tab-panes">
+			<div class="tab-pane selected" id="branding">
+				<%= form_for @setup, url: admin_setup_path(@setup), method: 'put', remote: true do |f| %>
+					<%= f.text_field :name, placeholder: 'name' %>
+					<%= f.text_field :logo, placeholder: 'logo icon' %>
+					<%= f.text_field :brand, placeholder: 'brand icon' %>
+					<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+				<% end %>
+			</div>
+			<div class="tab-pane" id="groups">
+				<div class="row">
+					<div class="col c3">
+						<ul class="tabs vertical">
+							<li class="selected" data-target="#groupnew">New Group</li>
+							<% Group.all.each do |group| %>
+								<li class="" data-target="#group<%= group.id %>"><%= group.name %></li>
+							<% end %>
+						</ul>
+					</div>
+					<div class="col c9">
+						<div class="tab-panes">
+							<div class="tab-pane selected" id="groupnew">
+								<%= form_for :group, url: admin_groups_path, method: 'post' do |f| %>
+									<%= f.text_field :name, placeholder: 'name' %>
+									<%= f.text_field :location, placeholder: 'location' %>
+									<%= f.text_field :category, placeholder: 'category' %>
+									<%= f.select :role, Role.all.collect {|r| [r.name, r.id]}, {}, {} %>
+									<%= f.submit 'Create', 'data-disable-with': 'saving...' %>
+								<% end %>
+							</div>
+							<% Group.all.each do |group| %>
+								<div class="tab-pane" id="group<%= group.id %>">
+									<h3><%= group.name %></h3>
+									<%= form_for group, url: admin_group_path(group), method: 'put' do |f| %>
+										<%= f.text_field :name, placeholder: 'name' %>
+										<%= f.text_field :location, placeholder: 'location' %>
+										<%= f.text_field :category, placeholder: 'category' %>
+										<%= f.select :role, Role.all.collect {|r| [r.name, r.id]}, {}, {} %>
+										<%= f.submit 'Create', 'data-disable-with': 'saving...' %>
+									<% end %>
+
+									<h4>Form Fields for this Group</h4>
+									<% group.fields.each do |field| %>
+										<%= form_for field, url: admin_field_path(field), method: 'put', remote: true do |f| %>
+											<%= f.text_field :name, placeholder: 'name' %>
+											<%= f.check_box :required %>
+											<%= f.text_area :options, placeholder: 'options (comma separated)' %>
+											<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+										<% end %>
+									<% end %>
+
+									<%= form_for :field, url: admin_fields_path, method: 'post' do |f| %>
+										<%= f.hidden_field :group_id, value: group.id %>
+										<%= f.text_field :name, placeholder: 'name' %>
+										<%= f.check_box :required %>
+										<%= f.text_area :options, placeholder: 'options (comma separated)' %>
+										<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+									<% end %>
+
+								</div>
+							<% end %>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="security">
+
+				<% Role.all.each do |role| %>
+					<h4><%= role.name %></h4>
+					<%= form_for role, url: admin_role_path(role), method: 'put' do |f| %>
+						<%= f.text_field :name, placeholder: 'name' %>
+						<%= f.label 'Super User' %>
+						<%= f.check_box :super_user %>
+
+						<%= f.label 'Is able to edit their own employees' %>
+						<%= f.check_box :can_edit_employees %>
+
+						<%= f.label 'Is able to edit their own profile' %>
+						<%= f.check_box :can_edit_own %>
+
+						<%= f.label 'Is able to create content' %>
+						<%= f.check_box :can_create_content %>
+
+						<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+					<% end %>
+				<% end %>
+
+				<h4>New Role</h4>
+				<%= form_for :role, url: admin_roles_path, method: 'post' do |f| %>
+					<%= f.text_field :name, placeholder: 'name' %>
+					<%= f.label 'Super User' %>
+					<%= f.check_box :super_user %>
+
+					<%= f.label 'Is able to edit their own employees' %>
+					<%= f.check_box :can_edit_employees %>
+
+					<%= f.label 'Is able to edit their own profile' %>
+					<%= f.check_box :can_edit_own %>
+
+					<%= f.label 'Is able to create content' %>
+					<%= f.check_box :can_create_content %>
+
+					<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+				<% end %>
+
+			</div>
+			<div class="tab-pane" id="dashboard">Hi</div>
+			<div class="tab-pane" id="reports">Hi</div>
+		</div>
+	</div>
+</div>

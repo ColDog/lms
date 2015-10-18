@@ -1,0 +1,12 @@
+<div class="panel-light">
+	<%= form_for :learning_object, url: obj ? admin_learning_object_path(obj) : admin_learning_objects_path, method: obj ? 'put' : 'post', remote: 'true' do |f| %>
+		<%= f.hidden_field :category, value: 'quiz' %>
+		<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+		<div id="obj<%= obj.try(:id) %>"></div>
+		<button onclick="addMarked('#obj<%= obj.try(:id) %>')">Add Marked Question</button>
+		<button onclick="addText('#obj<%= obj.try(:id) %>')">Add Text Question</button>
+		<button onclick="addNumber('#obj<%= obj.try(:id) %>')">Add Number Question</button>
+		<button onclick="addMC('#obj<%= obj.try(:id) %>')">Add Multiple Choice Question</button>
+	<% end %>
+</div>
+

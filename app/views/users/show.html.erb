@@ -1,0 +1,51 @@
+<h1><%= current_user.name %></h1>
+
+<div class="row">
+	<div class="c8 col">
+		<ul class="tabs">
+			<li class="selected" data-target="#profile">Profile</li>
+			<li class="" data-target="#learning_plan">Security</li>
+			<% if edit_own? %>
+				<li class="" data-target="#edit">Edit</li>
+			<% end %>
+		</ul>
+
+		<div class="tab-panes">
+			<div class="tab-pane selected" id="profile">
+				Hello there
+			</div>
+			<div class="tab-pane" id="learning_plan">
+				Hi Hi
+			</div>
+
+			<% if edit_own? %>
+				<div class="tab-pane" id="edit">
+					<%= form_for @user, url: user_path(@user), method: :put do |f| %>
+						<%= f.text_field :email, placeholder: 'email' %>
+						<%= f.text_field :name, placeholder: 'name' %>
+
+
+						<%= f.fields_for 'data[]', [] do |ff| %>
+							<% count = 0 %>
+							<% @user.fields.each do |field| %>
+								<%= ff.hidden_field :field_id, value: field.id %>
+								<%= ff.hidden_field :field_name, value: field.name %>
+								<%= ff.label field.name %>
+								<%= ff.text_field :answer, value: @user.data[count] ? @user.data[count]['answer'] : '' %>
+								<% count += 1 %>
+							<% end %>
+						<% end %>
+
+						<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+					<% end %>
+				</div>
+			<% end %>
+
+		</div>
+	</div>
+
+	<div class="c4 col">
+		<h5>Notifications</h5>
+		<!-- Redis entries list here -->
+	</div>
+</div>

@@ -1,0 +1,5 @@
+<%= form_for :learning_object, url: obj ? admin_learning_object_path(obj) : admin_learning_objects_path, method: obj ? 'put' : 'post', remote: 'true' do |f| %>
+	<%= f.hidden_field :category, value: 'text' %>
+	<textarea name="learning_object[fields][text]"><%= obj.get_field('text') %></textarea>
+	<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+<% end %>

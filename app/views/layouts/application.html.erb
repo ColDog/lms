@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nnfab</title>
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+	<%= csrf_meta_tags %>
+</head>
+<body>
+
+<nav id="top-nav">
+	<ul>
+		<li><a id="open-sidebar-left" href="#">Menu</a></li>
+		<li><%= link_to current_user.name, user_path(current_user) if current_user %></li>
+	</ul>
+</nav>
+
+<nav id="sidebar-left">
+	<ul>
+		<li><a href="">My Courses</a></li>
+		<li><a href="">My Employees</a></li>
+		<li><hr></li>
+		<li><%= link_to 'Dashboard', admin_dashboard_path %></li>
+		<li><%= link_to 'Learning', admin_learning_path %></li>
+		<li><%= link_to 'Settings', admin_settings_path %></li>
+	</ul>
+</nav>
+
+<main id="page-wrap">
+	<%= yield %>
+</main>
+
+<% console %>
+<script>
+	(function() {
+
+		var modal_triggers = document.getElementsByClassName('launch-modal')
+		console.log(modal_triggers)
+		for (var m = 0; m < modal_triggers.length; m++){
+			modal_triggers[m].addEventListener('click', function(evt){
+				var modal = document.querySelector(evt.target.dataset.target)
+				modal.style.visibility = (modal.style.visibility == "visible") ? "hidden" : "visible";
+			})
+		}
+
+		if (document.getElementById('open-sidebar-left')) {
+			document.getElementById('open-sidebar-left').addEventListener('click', function(evt){
+				console.log('clicked')
+				document.getElementById('sidebar-left').classList.toggle('open')
+			})
+		}
+
+		var tabs = document.querySelectorAll('.tabs li')
+		for (var i = 0; i < tabs.length; i++) {
+			tabs[i].addEventListener("click", function(e) {
+				var target_tab = e.target
+				var target_pane = document.querySelector(e.target.dataset.target)
+				var all_tabs = e.target.parentElement.querySelectorAll('.tabs li')
+
+				console.log()
+
+				for (var i1 = 0; i1 < all_tabs.length; i1++) {
+					all_tabs[i1].classList.remove('selected')
+					document.querySelector( all_tabs[i1].dataset.target ).classList.remove('selected')
+				}
+
+				target_pane.classList.add('selected')
+				target_tab.classList.add('selected')
+
+			});
+		}
+	})();
+</script>
+
+</body>
+</html>
+

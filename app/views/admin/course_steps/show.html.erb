@@ -1,0 +1,22 @@
+<page id="course_steps-show">
+	<nav class="flowing-header">
+		<% %W[ text quiz survey video ].each do |name| %>
+			<a href="#" onclick="addElement('<%= name %>')"><%= name %></a>
+		<% end %>
+	</nav>
+	<main>
+		<% @course_step.learning_objects.each do |object| %>
+			<%= render "/admin/learning_objects/#{object.category}", obj: object %>
+		<% end %>
+	</main>
+	<aside>Hello!!</aside>
+</page>
+
+<script>
+	function addElement(name){
+		$.post('/admin/learning_objects', {learning_object: {name: 'new object', category: name, course_step_id: <%= params[:id] %>}}, function(data){
+			console.log(data)
+			$('#objects').append(data)
+		})
+	}
+</script>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 
+  name: MyString
+  validation: MyString
+  options: MyText
+  required: false
+
+two:
+  group_id: 
+  name: MyString
+  validation: MyString
+  options: MyText
+  required: false

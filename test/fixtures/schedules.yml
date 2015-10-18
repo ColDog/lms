@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  course_step_id: 
+  start_time: 2015-10-16 10:33:07
+  end_time: 2015-10-16 10:33:07
+
+two:
+  course_step_id: 
+  start_time: 2015-10-16 10:33:07
+  end_time: 2015-10-16 10:33:07

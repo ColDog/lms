@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  super_user: false
+  can_edit_employees: false
+  can_edit_own: false
+  can_create_content: false
+
+two:
+  name: MyString
+  super_user: false
+  can_edit_employees: false
+  can_edit_own: false
+  can_create_content: false
