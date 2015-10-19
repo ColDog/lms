@@ -1,22 +1,72 @@
-<page id="course_steps-show">
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+	<li><%= link_to 'Admin', admin_dashboard_path %></li>
+	<li><%= link_to 'Courses', admin_courses_path %></li>
+	<li><%= link_to @course.name, admin_course_path(@course) %></li>
+	<li><%= @course_step.name %></li>
+</ul>
+
+<main id="course_steps-show">
 	<nav class="flowing-header">
 		<% %W[ text quiz survey video ].each do |name| %>
 			<a href="#" onclick="addElement('<%= name %>')"><%= name %></a>
 		<% end %>
 	</nav>
-	<main>
-		<% @course_step.learning_objects.each do |object| %>
-			<%= render "/admin/learning_objects/#{object.category}", obj: object %>
-		<% end %>
-	</main>
-	<aside>Hello!!</aside>
-</page>
+	<row class="row">
+		<section id="objects" class="col c8">
+			<% @course_step.learning_objects.order(:order).each do |object| %>
+				<%= render "/admin/learning_objects/#{object.category}", obj: object %>
+			<% end %>
+		</section>
+		<aside class="col c4">
+			<h1><%= @course_step.name %></h1>
+			<p><%= @course_step.description %></p>
+			<hr>
+			<h3>Scheduling</h3>
+			<% @course_step.schedules.each do |schedule| %>
+				<%= schedule.start_time.strftime('%H:%M on %b %e, %Y') %>
+				-
+				<%= schedule.end_time.strftime('%H:%M on %b %e, %Y') %>
+				<%= link_to raw('&times;'), admin_schedule_path(schedule), method: 'delete' %>
+			<% end %>
+			<%= form_for :schedule, url: admin_schedules_path, method: 'post' do |f| %>
+				<%= f.hidden_field :course_step_id, value: @course_step.id %>
+				<h5>Add a New Time</h5>
+				<label>Start Time</label>
+				<%= f.datetime_local_field :start_time %>
+				<label>End Time</label>
+				<%= f.datetime_local_field :end_time %>
+				<%= f.submit 'Create', 'data-disable-with': 'scheduling...', class: 'btn' %>
+			<% end %>
+
+		</aside>
+	</row>
+</main>
 
 <script>
 	function addElement(name){
 		$.post('/admin/learning_objects', {learning_object: {name: 'new object', category: name, course_step_id: <%= params[:id] %>}}, function(data){
 			console.log(data)
 			$('#objects').append(data)
+			initSort()
 		})
 	}
+
+	function initSort() {
+		var el = document.getElementById('objects');
+		Sortable.create(el, {
+			onEnd: function (evt) {
+				var children = $('#objects').children()
+				var order = []
+				for (var i=0;i<children.length;i++) {
+					order.push( children[i].id.split('_')[1] )
+				}
+				$.post('/admin/learning_objects/order', {order: order, course_step_id: <%= params[:id] %>})
+			}
+		});
+	}
+
+	(function(){
+		initSort()
+	})()
 </script>

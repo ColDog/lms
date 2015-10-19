@@ -1,0 +1,62 @@
+.row { width : 100%; max-width : 1200px; margin: auto }
+.row:before,
+.row:after { content:""; display: table ; clear:both; }
+.row *{ box-sizing: border-box; }
+
+row { width : 100%; max-width : 1200px; margin: auto }
+row:before,
+row:after { content:""; display: table ; clear:both; }
+row *{ box-sizing: border-box; }
+
+
+
+@mixin col_float {
+  float: left;
+  min-height: 1px;
+  padding: $gridGutterWidth * 1px;
+}
+
+@mixin column($num) { width: (1 / $num) * 100%; @include col_float }
+@mixin columns($factor, $num) { width: (1 / ($factor / $num)) * 100%; @include col_float }
+
+@mixin container { padding: 15px; width: 100% }
+
+.container { @include container }
+
+.col {@include col_float}
+@media screen and (max-width: $small) {
+  .c1, .c2, .c3, .c4, .c5, .c6, .c7
+  .c8, .c9, .c10, .c11, .c12 {
+    @include columns(1,1)
+  }
+}
+
+@media screen and (max-width: $medium) and (min-width: $small + 1px) {
+  .c1 {@include columns(6, 1)}
+  .c2 {@include columns(6, 1)}
+  .c3 {@include columns(6, 2)}
+  .c4 {@include columns(6, 2)}
+  .c5 {@include columns(6, 3)}
+  .c6 {@include columns(6, 3)}
+  .c7 {@include columns(6, 4)}
+  .c8 {@include columns(6, 4)}
+  .c9 {@include columns(6, 5)}
+  .c10 {@include columns(6, 5)}
+  .c11 {@include columns(6, 6)}
+  .c12 {@include columns(6, 6)}
+}
+
+@media screen and (min-width: $medium + 1px) {
+  .c1 {@include columns(12, 1)}
+  .c2 {@include columns(12, 2)}
+  .c3 {@include columns(12, 3)}
+  .c4 {@include columns(12, 4)}
+  .c5 {@include columns(12, 5)}
+  .c6 {@include columns(12, 6)}
+  .c7 {@include columns(12, 7)}
+  .c8 {@include columns(12, 8)}
+  .c9 {@include columns(12, 9)}
+  .c10 {@include columns(12, 10)}
+  .c11 {@include columns(12, 11)}
+  .c12 {@include columns(12, 12)}
+}

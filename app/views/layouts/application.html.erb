@@ -2,37 +2,83 @@
 <html>
 <head>
 	<title>Nnfab</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 	<%= csrf_meta_tags %>
 </head>
 <body>
 
-<nav id="top-nav">
-	<ul>
-		<li><a id="open-sidebar-left" href="#">Menu</a></li>
-		<li><%= link_to current_user.name, user_path(current_user) if current_user %></li>
+<nav class="navbar">
+	<ul class="navbar-left">
+		<li><a id="open-sidebar-left" href="#"><i class="fa fa-th-large"></i></a></li>
+	</ul>
+	<ul class="navbar-right">
+		<li><%= link_to raw('<i class="fa fa-user"></i>'), user_path(current_user) if current_user %></li>
+		<li><a id="open-help" href="#"><i class="fa fa-question"></i></a></li>
+		<li><a id="open-sidebar-right" href="#"><i class="fa fa-th"></i></a></li>
 	</ul>
 </nav>
 
-<nav id="sidebar-left">
+<nav id="sidebar-left" class="open">
 	<ul>
-		<li><a href="">My Courses</a></li>
-		<li><a href="">My Employees</a></li>
+		<li class="<%= add_active('home', 'index') %>"><%= link_to icon('home'), root_path, title: 'Home' %></li>
+		<li class="<%= add_active('courses', 'index') %>"><%= link_to icon('briefcase'), courses_path, title: 'Courses' %></li>
+		<li class="<%= add_active('users', 'index') %>"><%= link_to icon('users'), users_path, title: 'People' %></li>
 		<li><hr></li>
-		<li><%= link_to 'Dashboard', admin_dashboard_path %></li>
-		<li><%= link_to 'Learning', admin_learning_path %></li>
-		<li><%= link_to 'Settings', admin_settings_path %></li>
+		<li class="<%= add_active('admin/admin', 'index') %>"><%= link_to icon('dashboard'), admin_dashboard_path, title: 'Admin Dashboard' %></li>
+		<li class="<%= add_active('admin/courses', 'index') %>"><%= link_to icon('folder'), admin_courses_path, title: 'Admin Courses' %></li>
+		<li class="<%= add_active('admin/admin', 'settings') %>"><%= link_to icon('gear'), admin_settings_path, title: 'Settingss' %></li>
 	</ul>
 </nav>
 
-<main id="page-wrap">
-	<%= yield %>
-</main>
+<nav id="sidebar-right" class="open">
+	<h3>Many things</h3>
+</nav>
 
-<% console %>
+
+<div id="page-wrap" class="right-open left-open">
+	<nav id="help">
+		<div class="container">
+			<h4>Help</h4>
+		</div>
+	</nav>
+
+	<%= yield %>
+
+</div>
+
 <script>
 	(function() {
+
+		// Add an event listener
+		document.addEventListener("name-of-event", function(e) {
+			console.log(e.detail); // Prints "Example of an event"
+		});
+
+		var open_dialogues = document.querySelectorAll('*[data-dialogue]')
+		for (var d=0; d < open_dialogues.length; d++){
+			open_dialogues[d].addEventListener('click', function(evt){
+				console.log('dataset', evt.target.dataset.dialogue)
+				document.getElementById(evt.target.dataset.dialogue).classList.toggle('open')
+			})
+		}
+
+		var dialogues = document.querySelectorAll('.dialogue')
+		for (var f=0; f < dialogues.length; f++){
+			dialogues[f].addEventListener('click', function(evt){
+				evt.target.classList.toggle('open')
+			})
+		}
+
+
+		var expanders = document.querySelectorAll('*[data-expand]')
+		console.log('expanders', expanders)
+		for (var e = 0; e < expanders.length; e++){
+			expanders[e].addEventListener('click', function(evt){
+				document.getElementById(evt.target.dataset.expand).classList.toggle('expanded')
+			})
+		}
 
 		var modal_triggers = document.getElementsByClassName('launch-modal')
 		console.log(modal_triggers)
@@ -45,8 +91,21 @@
 
 		if (document.getElementById('open-sidebar-left')) {
 			document.getElementById('open-sidebar-left').addEventListener('click', function(evt){
-				console.log('clicked')
 				document.getElementById('sidebar-left').classList.toggle('open')
+				document.getElementById('page-wrap').classList.toggle('left-open')
+			})
+		}
+
+		if (document.getElementById('open-sidebar-right')) {
+			document.getElementById('open-sidebar-right').addEventListener('click', function(evt){
+				document.getElementById('sidebar-right').classList.toggle('open')
+				document.getElementById('page-wrap').classList.toggle('right-open')
+			})
+		}
+
+		if (document.getElementById('open-help')) {
+			document.getElementById('open-help').addEventListener('click', function(evt){
+				document.getElementById('help').classList.toggle('open')
 			})
 		}
 
@@ -67,6 +126,10 @@
 				target_pane.classList.add('selected')
 				target_tab.classList.add('selected')
 
+
+				// Create the event and fire it
+				var event = new CustomEvent("tab-changed");
+				document.dispatchEvent(event);
 			});
 		}
 	})();

@@ -1,0 +1,22 @@
+<div class="container">
+	<h4><%= @course_step.course.name %> > <%= @course_step.name %></h4>
+	<% @course_step.learning_objects.each do |lobj| %>
+		<div class="row" style="border: thin solid #EFEFEF; padding: 15px; margin-top: 15px; border-radius: 10px">
+			<% case lobj.category %>
+			<% when 'text' %>
+				<%= lobj.fields['text'] %>
+			<% when 'quiz' %>
+				<h4>Quiz: <%= lobj.name %></h4>
+				<% lobj.fields.each do |quiz_field| %>
+					<% case quiz_field['type'] %>
+			<% when 'long-answer' %>
+						<%= quiz_field['question'] %>
+
+					<% else %>
+						Hello
+					<% end %>
+				<% end %>
+			<% end %>
+		</div>
+	<% end %>
+</div>

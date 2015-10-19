@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
   SETUP = Setup.find(1)
 
   def redirect_update(rec)
-    send("#{@model.name.underscore.pluralize}_path")
+    :back
   end
 
   def redirect_create(rec)
-    send("#{@model.name.underscore}_path", rec)
+    :back
   end
 
   def edit
@@ -71,10 +71,9 @@ class ApplicationController < ActionController::Base
   def destroy
     @model.find(params[:id]).destroy
     flash[:danger] = "#{@model.name} deleted"
-    redirect_to :back
     respond_to do |r|
       r.json { render json: {errors: nil } }
-      r.html { render }
+      r.html { redirect_to :back }
     end
   end
 

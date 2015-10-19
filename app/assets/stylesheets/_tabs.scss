@@ -1,0 +1,19 @@
+.tabs.vertical { list-style-type: none; padding: 0;
+  ul { margin: 0 !important; padding: 0; }
+  li { display: block; padding: 9px 10px; border: none; cursor: pointer;  }
+  li:hover {  background-color: $colorGrey;  }
+  li.selected { background-color: $colorGrey;  }
+}
+
+.tabs { list-style-type: none; padding: 0;
+  ul { margin: 0; border-bottom: thin solid $colorGrey; }
+  li { display: inline-block; padding: 5px 15px; margin: 0; border-top: thin solid $colorBlue; border-left: thin solid $colorBlue; border-right: thin solid $colorBlue; cursor: pointer;  }
+  li:hover {  background-color: $colorGrey;  }
+  li.selected { background-color: $colorBlue; color: #fff; }
+}
+
+.tab-panes { border-top: medium solid $colorBlue; padding-top: 15px; }
+.vertical  { border-top: none; padding-top: 15px; }
+.tab-pane { display: none; position: relative }
+.tab-pane.selected { display: block }
+

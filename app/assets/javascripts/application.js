@@ -13,36 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require sortable
+//= require moment
+//= require fullcalendar
 //= require_tree .
-
-function addText(id) {
-    $(id).append(
-        '<input name="learning_object[fields][][question]" type="text">' +
-        '<input name="learning_object[fields][][answer]" type="text">' +
-        '<input name="learning_object[fields][][type]" type="hidden" value="text-answer">'
-    )
-}
-function addMarked(id) {
-    $(id).append(
-        '<input name="learning_object[fields][][question]" type="text">' +
-        '<input name="learning_object[fields][][type]" type="hidden" value="text-marked">'
-    )
-}
-function addMC() {
-    $(id).append(
-        '<input name="learning_object[fields][][question]" type="text" placeholder="question">' +
-        '<input name="learning_object[fields][][option1]" type="text" placeholder="option">' +
-        '<input name="learning_object[fields][][option2]" type="text" placeholder="option">' +
-        '<input name="learning_object[fields][][option3]" type="text" placeholder="option">' +
-        '<input name="learning_object[fields][][answer]" type="text" placeholder="answer">' +
-        '<input name="learning_object[fields][][type]" type="hidden" value="mc">'
-    )
-}
-function addNumber() {
-    $(id).append(
-        '<input name="learning_object[fields][][question]" type="text">' +
-        '<input name="learning_object[fields][][answer]" type="number">' +
-        '<input name="learning_object[fields][][type]" type="hidden" value="number">'
-    )
-}
-

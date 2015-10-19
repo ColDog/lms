@@ -11,10 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151016183813) do
+ActiveRecord::Schema.define(version: 1) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "answers", force: :cascade do |t|
+    t.integer  "question_id"
+    t.integer  "user_id"
+    t.string   "file"
+    t.text     "answer"
+    t.boolean  "correct"
+    t.decimal  "score"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+  add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
+
+  create_table "assignments", force: :cascade do |t|
+    t.integer  "course_id"
+    t.string   "name"
+    t.string   "category"
+    t.decimal  "is_worth"
+    t.decimal  "required_score"
+    t.boolean  "required",       default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "assignments", ["course_id"], name: "index_assignments_on_course_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "schedule_id", null: false
@@ -26,29 +53,21 @@ ActiveRecord::Schema.define(version: 20151016183813) do
   add_index "attendances", ["schedule_id"], name: "index_attendances_on_schedule_id", using: :btree
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
-  create_table "certification_items", force: :cascade do |t|
-    t.integer  "certification_id",   null: false
-    t.string   "verification_key",   null: false
-    t.integer  "learning_object_id", null: false
-    t.integer  "course_id",          null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "certification_items", ["certification_id"], name: "index_certification_items_on_certification_id", using: :btree
-  add_index "certification_items", ["course_id"], name: "index_certification_items_on_course_id", using: :btree
-  add_index "certification_items", ["learning_object_id"], name: "index_certification_items_on_learning_object_id", using: :btree
-
   create_table "certifications", force: :cascade do |t|
-    t.string   "name",        null: false
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "course_id",  null: false
+    t.integer  "user_id",    null: false
+    t.string   "key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
+
+  add_index "certifications", ["course_id"], name: "index_certifications_on_course_id", using: :btree
+  add_index "certifications", ["user_id"], name: "index_certifications_on_user_id", using: :btree
 
   create_table "course_steps", force: :cascade do |t|
     t.integer  "course_id",   null: false
     t.string   "name",        null: false
+    t.integer  "order"
     t.text     "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
@@ -64,8 +83,10 @@ ActiveRecord::Schema.define(version: 20151016183813) do
   end
 
   create_table "enrollments", force: :cascade do |t|
-    t.integer  "course_id"
-    t.integer  "user_id"
+    t.integer  "course_id",  null: false
+    t.integer  "user_id",    null: false
+    t.boolean  "passed"
+    t.decimal  "grade"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -100,11 +121,12 @@ ActiveRecord::Schema.define(version: 20151016183813) do
   create_table "learning_objects", force: :cascade do |t|
     t.string   "name",           null: false
     t.text     "description"
-    t.json     "fields"
+    t.text     "content"
+    t.string   "category"
+    t.integer  "course_step_id"
+    t.integer  "order"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.integer  "course_step_id"
-    t.string   "category"
   end
 
   add_index "learning_objects", ["course_step_id"], name: "index_learning_objects_on_course_step_id", using: :btree
@@ -118,6 +140,35 @@ ActiveRecord::Schema.define(version: 20151016183813) do
 
   add_index "participants", ["course_step_id"], name: "index_participants_on_course_step_id", using: :btree
   add_index "participants", ["user_id"], name: "index_participants_on_user_id", using: :btree
+
+  create_table "questions", force: :cascade do |t|
+    t.integer  "assignment_id",                   null: false
+    t.string   "category"
+    t.text     "question"
+    t.text     "options"
+    t.text     "correct"
+    t.integer  "order"
+    t.boolean  "computer_marked", default: false
+    t.boolean  "user_marked",     default: false
+    t.boolean  "upload_required", default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "questions", ["assignment_id"], name: "index_questions_on_assignment_id", using: :btree
+
+  create_table "requirements", force: :cascade do |t|
+    t.integer  "course_id",     null: false
+    t.integer  "schedule_id"
+    t.integer  "assignment_id"
+    t.decimal  "score"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "requirements", ["assignment_id"], name: "index_requirements_on_assignment_id", using: :btree
+  add_index "requirements", ["course_id"], name: "index_requirements_on_course_id", using: :btree
+  add_index "requirements", ["schedule_id"], name: "index_requirements_on_schedule_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name",                               null: false
@@ -148,15 +199,15 @@ ActiveRecord::Schema.define(version: 20151016183813) do
     t.datetime "updated_at",    null: false
   end
 
-  create_table "user_certifications", force: :cascade do |t|
-    t.integer  "certification_item_id", null: false
-    t.integer  "user_id",               null: false
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+  create_table "slide_shows", force: :cascade do |t|
+    t.string   "source"
+    t.integer  "order"
+    t.integer  "learning_object_id", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
-  add_index "user_certifications", ["certification_item_id"], name: "index_user_certifications_on_certification_item_id", using: :btree
-  add_index "user_certifications", ["user_id"], name: "index_user_certifications_on_user_id", using: :btree
+  add_index "slide_shows", ["learning_object_id"], name: "index_slide_shows_on_learning_object_id", using: :btree
 
   create_table "user_fields", force: :cascade do |t|
     t.integer  "field_id",   null: false
@@ -178,19 +229,6 @@ ActiveRecord::Schema.define(version: 20151016183813) do
 
   add_index "user_groups", ["group_id"], name: "index_user_groups_on_group_id", using: :btree
   add_index "user_groups", ["user_id"], name: "index_user_groups_on_user_id", using: :btree
-
-  create_table "user_learning_objects", force: :cascade do |t|
-    t.json     "answers"
-    t.boolean  "passed"
-    t.decimal  "score"
-    t.integer  "user_id",            null: false
-    t.integer  "learning_object_id", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "user_learning_objects", ["learning_object_id"], name: "index_user_learning_objects_on_learning_object_id", using: :btree
-  add_index "user_learning_objects", ["user_id"], name: "index_user_learning_objects_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -216,11 +254,23 @@ ActiveRecord::Schema.define(version: 20151016183813) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", using: :btree
   add_index "users", ["role_id"], name: "index_users_on_role_id", using: :btree
 
+  create_table "videos", force: :cascade do |t|
+    t.string   "source"
+    t.integer  "order"
+    t.integer  "learning_object_id", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "videos", ["learning_object_id"], name: "index_videos_on_learning_object_id", using: :btree
+
+  add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "users"
+  add_foreign_key "assignments", "courses"
   add_foreign_key "attendances", "schedules"
   add_foreign_key "attendances", "users"
-  add_foreign_key "certification_items", "certifications"
-  add_foreign_key "certification_items", "courses"
-  add_foreign_key "certification_items", "learning_objects"
+  add_foreign_key "certifications", "courses"
+  add_foreign_key "certifications", "users"
   add_foreign_key "course_steps", "courses"
   add_foreign_key "enrollments", "courses"
   add_foreign_key "enrollments", "users"
@@ -229,14 +279,16 @@ ActiveRecord::Schema.define(version: 20151016183813) do
   add_foreign_key "learning_objects", "course_steps"
   add_foreign_key "participants", "course_steps"
   add_foreign_key "participants", "users"
+  add_foreign_key "questions", "assignments"
+  add_foreign_key "requirements", "assignments"
+  add_foreign_key "requirements", "courses"
+  add_foreign_key "requirements", "schedules"
   add_foreign_key "schedules", "course_steps"
-  add_foreign_key "user_certifications", "certification_items"
-  add_foreign_key "user_certifications", "users"
+  add_foreign_key "slide_shows", "learning_objects"
   add_foreign_key "user_fields", "fields"
   add_foreign_key "user_fields", "users"
   add_foreign_key "user_groups", "groups"
   add_foreign_key "user_groups", "users"
-  add_foreign_key "user_learning_objects", "learning_objects"
-  add_foreign_key "user_learning_objects", "users"
   add_foreign_key "users", "roles"
+  add_foreign_key "videos", "learning_objects"
 end

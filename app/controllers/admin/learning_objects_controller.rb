@@ -10,12 +10,19 @@ class Admin::LearningObjectsController < ApplicationController
     end
   end
 
+  def order
+    params[:order].each_with_index do |el_idx, order|
+      LearningObject.find(el_idx).update(order: order)
+    end
+    render json: {errors: nil}
+  end
+
   def redirect_create(rec)
     :back
   end
   private
   def vars
     @model = LearningObject
-    @params = [:name, :description, :course_step_id, :category, fields: [:text, :picture, :video]]
+    @params = [:name, :description, :course_step_id, :category, fields: [:text, :picture, :video, :type, :question, :answer, :options]]
   end
 end

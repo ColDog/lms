@@ -1,0 +1,191 @@
+/* =Navs
+-----------------------------------------------------------------------------*/
+
+
+.flowing-header {
+  background-color: $colorGrey; overflow: scroll; a { padding: 5px 10px };
+}
+
+/* NavBar */
+.navbar {
+    @include clearfix;
+    background-color: $navbarBackground;
+    position: fixed; top: 0; width: 100%;
+    z-index: 500;
+}
+.navbar-left {
+    float: left;
+}
+.navbar-right {
+    float: right;
+}
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    @include clearfix;
+}
+.navbar ul li {
+    float: left;
+}
+.navbar ul li a,
+.navbar ul li span {
+    display: block;
+    text-decoration: none;
+    padding: 10px 5px;
+    margin: 0 10px 0 10px;
+    color: $navbarLinkColor;
+}
+.navbar ul li a:hover {
+    color: $navbarLinkHover;;
+}
+.navbar ul li.active a,
+.navbar ul li span {
+    text-decoration: none;
+    cursor: text;
+    color: rgba(0, 0, 0, .4);
+}
+
+
+/* Fullwidth */
+.fullwidth ul {
+    width: 100%;
+}
+.fullwidth li {
+    float: none !important;
+    margin: 0;
+    display: table-cell;
+    width: 1%;
+    text-align: center;
+}
+.fullwidth li a,
+.fullwidth li span {
+    display: block;
+}
+
+
+/* Vertical */
+.nav {
+    @include rem('margin-bottom', $baseLineInEms);
+}
+.nav ul {
+    list-style: none;
+    margin: 0;
+}
+.nav ul li ul {
+    margin-left: 2em;
+    font-size: .95em;
+}
+.nav ul li a,
+.nav ul li span {
+    display: block;
+    padding: 5px 0;
+}
+.nav ul li ul li a,
+.nav ul li ul li span {
+    padding: 4px 0;
+}
+.nav ul li a {
+    text-decoration: none;
+}
+.nav ul li a:hover {
+    color: $colorLinkHover;
+    text-decoration: underline;
+}
+.nav ul li.active a,
+.nav ul li span {
+    text-decoration: none;
+    cursor: text;
+    color: rgba(0, 0, 0, .4);
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  margin: 5px;
+  padding: 1px 14px;
+  border-radius: 15px;
+  background-color: #ffffff;
+}
+.breadcrumbs ul {
+    font-size: .9em;
+    list-style: none;
+    margin: 0;
+}
+.breadcrumbs li {
+    margin-right: 3px;
+    display: inline-block;
+}
+.breadcrumbs li + li:before {
+    content: " > ";
+    color: #aaa;
+    font-size: 12px;
+    margin: 0 3px;
+    position: relative;
+    top: -1px;
+}
+
+.breadcrumbs ul li.active a {
+    text-decoration: none;
+    cursor: text;
+    color: rgba(0, 0, 0, .4);
+}
+
+/* =Pagination
+-----------------------------------------------------------------------------*/
+.pagination {
+    position: relative;
+    left: -9px;
+    margin-left: 0;
+    list-style: none;
+    @include clearfix;
+}
+.pagination li {
+    float: left;
+    margin-right: 2px;
+}
+.pagination li a,
+.pagination li span {
+    display: block;
+    padding: 7px 9px;
+    line-height: 1;
+    border-radius: 3px;
+    color: $colorBlack;
+    text-decoration: none;
+}
+.pagination span {
+    border: 1px solid #ddd;
+}
+.pagination li a:focus,
+.pagination li a:hover {
+    text-decoration: none;
+    background-color: $colorBlack;
+    color: #fff;
+}
+
+/* =Responsive
+-----------------------------------------------------------------------------*/
+@media only screen and (max-width: 767px) {
+    //.navbar-left,
+    //.navbar-right,
+    //.navbar ul li,
+    //.navbar-right ul li,
+    //.subnav-right ul,
+    //.subnav ul li,
+    //.subnav-right ul li {
+    //    float: none;
+    //    text-align: center;
+    //}
+    //.navbar ul li,
+    //.navbar-right ul li,
+    //.subnav ul li,
+    //.subnav-right ul li {
+    //    margin-left: 0;
+    //    margin-right: 0;
+    //}
+    .fullwidth ul {
+        width: auto;
+    }
+    .fullwidth li {
+        display: block;
+        width: auto;
+    }
+}

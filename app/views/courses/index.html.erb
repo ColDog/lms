@@ -1,0 +1,22 @@
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+	<li>Course Catalogue</li>
+</ul>
+
+<main class="container">
+	<div class="row">
+		<% Course.all.each do |course| %>
+			<div class="col c3">
+				<div class="panel">
+					<h4>
+						<%= course.name %>
+						<%= link_to icon('sign-in'),
+								enrollments_path(enrollment: {course_id: course.id, user_id: current_user.id}), method: 'post'
+						%>
+					</h4>
+					<%= course.description %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</main>

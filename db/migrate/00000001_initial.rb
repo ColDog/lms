@@ -10,12 +10,31 @@ class Initial < ActiveRecord::Migration
       t.timestamps null: false
     end
 
+    create_table :pictures do |t|
+      t.string :src
+      t.string :name
+      t.references :imageable, polymorphic: true, index: true, null: false, foreign_key: true
+
+      t.timestamps null: false
+    end
+
+
     create_table :roles do |t|
       t.string :name, null: false
       t.boolean :super_user, default: false
       t.boolean :can_edit_employees, default: false
       t.boolean :can_edit_own, default: false
       t.boolean :can_create_content, default: false
+
+      t.timestamps null: false
+    end
+
+    create_table :groups do |t|
+      t.string :name, null: false
+      t.string :location
+      t.string :category
+      t.references :role, index: true, foreign_key: true
+      t.text :description
 
       t.timestamps null: false
     end
@@ -47,16 +66,6 @@ class Initial < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    create_table :groups do |t|
-      t.string :name, null: false
-      t.string :location
-      t.string :category
-      t.references :role, index: true, foreign_key: true
-      t.text :description
-
-      t.timestamps null: false
-    end
-
     create_table :user_groups do |t|
       t.references :group, index: true, foreign_key: true, null: false
       t.references :user, index: true, foreign_key: true, null: false
@@ -74,6 +83,7 @@ class Initial < ActiveRecord::Migration
     create_table :course_steps do |t|
       t.references :course, index: true, foreign_key: true, null: false
       t.string :name, null: false
+      t.integer :order
       t.text :description
 
       t.timestamps null: false
@@ -82,40 +92,70 @@ class Initial < ActiveRecord::Migration
     create_table :learning_objects do |t|
       t.string :name, null: false
       t.text :description
-      t.json :fields
+      t.text :content
+      t.string :category
+      t.references :course_step, foreign_key: true, index: true
+      t.integer :order
 
       t.timestamps null: false
     end
 
-    create_table :user_learning_objects do |t|
-      t.json :answers
-      t.boolean :passed
+    create_table :assignments do |t|
+      t.references :course, index: true, foreign_key: true
+      t.string :name
+      t.string :category
+      t.decimal :is_worth
+      t.decimal :required_score
+      t.boolean :required, default: false
+
+      t.timestamps null: false
+    end
+
+    create_table :questions do |t|
+      t.references :assignment, index: true, foreign_key: true, null: false
+      t.string :category
+      t.text :question
+      t.text :options
+      t.text :correct
+      t.integer :order
+      t.boolean :computer_marked, default: false
+      t.boolean :user_marked, default: false
+      t.boolean :upload_required, default: false
+
+      t.timestamps null: false
+    end
+
+    create_table :answers do |t|
+      t.references :question, index: true, foreign_key: true
+      t.references :user, index: true, foreign_key: true
+      t.string :file
+      t.text :answer
+      t.boolean :correct, default: nil
       t.decimal :score
-      t.references :user, index: true, foreign_key: true, null: false
+
+      t.timestamps null: false
+    end
+
+    create_table :videos do |t|
+      t.string :source
+      t.integer :order
+      t.references :learning_object, index: true, foreign_key: true, null: false
+
+      t.timestamps null: false
+    end
+
+    create_table :slide_shows do |t|
+      t.string :source
+      t.integer :order
       t.references :learning_object, index: true, foreign_key: true, null: false
 
       t.timestamps null: false
     end
 
     create_table :certifications do |t|
-      t.string :name, null: false
-      t.text :description
-
-      t.timestamps null: false
-    end
-
-    create_table :certification_items do |t|
-      t.references :certification, index: true, foreign_key: true, null: false
-      t.string  :verification_key, null: false
-      t.references :learning_object, index: true, foreign_key: true, null: false
       t.references :course, index: true, foreign_key: true, null: false
-
-      t.timestamps null: false
-    end
-
-    create_table :user_certifications do |t|
-      t.references :certification_item, index: true, foreign_key: true, null: false
       t.references :user, index: true, foreign_key: true, null: false
+      t.string :key
 
       t.timestamps null: false
     end
@@ -134,6 +174,47 @@ class Initial < ActiveRecord::Migration
       t.references :field, index: true, foreign_key: true, null: false
       t.references :user, index: true, foreign_key: true, null: false
       t.string :answer
+
+      t.timestamps null: false
+    end
+
+    create_table :enrollments do |t|
+      t.references :course, index: true, foreign_key: true, null: false
+      t.references :user, index: true, foreign_key: true, null: false
+      t.boolean :passed
+      t.decimal :grade
+
+      t.timestamps null: false
+    end
+
+    create_table :participants do |t|
+      t.references :course_step, index: true, foreign_key: true, null: false
+      t.references :user, index: true, foreign_key: true, null: false
+
+      t.timestamps null: false
+    end
+
+    create_table :schedules do |t|
+      t.references :course_step, index: true, foreign_key: true, null: false
+      t.datetime :start_time
+      t.datetime :end_time
+
+      t.timestamps null: false
+    end
+
+    create_table :attendances do |t|
+      t.references :schedule, index: true, foreign_key: true, null: false
+      t.references :user, index: true, foreign_key: true, null: false
+
+      t.timestamps null: false
+    end
+
+    create_table :requirements do |t|
+      t.references :course, index: true, foreign_key: true, null: false
+      t.references :schedule, index: true, foreign_key: true
+      t.references :assignment, index: true, foreign_key: true
+      t.decimal :score
+      t.decimal :weight
 
       t.timestamps null: false
     end

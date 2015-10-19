@@ -1,4 +1,21 @@
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+</ul>
+
 <div class="row">
-	<div class="c6">Heloo</div>
+	<div class="c4">
+		<h4>My Courses</h4>
+		<ul class="list-group">
+			<% current_user.enrollments.each do |enrollment| %>
+				<li>
+					<h5><%= link_to enrollment.course.name, course_path(enrollment.course) %></h5>
+					<p>
+						Completion:
+						Grade:
+					</p>
+				</li>
+			<% end %>
+		</ul>
+	</div>
 	<div class="c6">Heloo</div>
 </div>

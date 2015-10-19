@@ -1,14 +1,177 @@
-<% @course.course_steps.each do |step| %>
-	<div>
-		<h4><%= link_to step.name, admin_course_course_step_path(@course, step) %></h4>
-		<p><%= step.description %></p>
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+	<li><%= link_to 'Admin', admin_dashboard_path %></li>
+	<li><%= link_to 'Courses', admin_courses_path %></li>
+	<li><%= @course.name %></li>
+</ul>
+
+<main class="container">
+	<h1><%= @course.name %></h1>
+	<ul class="tabs">
+		<li class="selected" data-target="#mods<%= @course.id %>">Modules</li>
+		<li class="" data-target="#cals<%= @course.id %>">Calendar</li>
+		<li class="" data-target="#assns<%= @course.id %>">Assignments</li>
+		<li class="" data-target="#users<%= @course.id %>">Users</li>
+		<li class="" data-target="#reqs<%= @course.id %>">Requirements</li>
+		<li class="" data-target="#edit<%= @course.id %>">Edit</li>
+	</ul>
+	<div class="tab-panes">
+		<div class="tab-pane" id="cals<%= @course.id %>">
+			<div id="cal<%= @course.id %>"></div>
+		</div>
+
+		<div class="tab-pane selected" id="mods<%= @course.id %>">
+			<ul class="list-group">
+				<% @course.course_steps.each_with_index do |step, idx| %>
+					<li>
+						<h4><%= link_to step.name, admin_course_course_step_path(@course, step) %></h4>
+						<p><%= step.description %></p>
+						<button class="btn side-link-top" data-expand="scheds<%= step.id %>"><%= icon('calendar') %></button>
+						<div id="scheds<%= step.id %>" class="collapsed">
+							<table>
+								<thead>
+								<tr><td>Starts</td><td>Ends</td><td>Enrolled</td><td>Participated</td></tr>
+								</thead>
+								<% step.schedules.each do |schedule| %>
+									<tr>
+										<td><%= schedule.start_time.strftime('%H:%M on %b %e, %Y') %></td>
+										<td><%= schedule.end_time.strftime('%H:%M on %b %e, %Y') %></td>
+										<td><%= step.participants.count %></td>
+										<td><%= schedule.attendances.count %></td>
+										<td><%= link_to raw('&times;'), admin_schedule_path(schedule), method: 'delete' %></td>
+									</tr>
+								<% end %>
+							</table>
+						</div>
+					</li>
+				<% end %>
+			</ul>
+
+			<aside class="dialogue" id="module-add">
+				<div>
+					<h4>New Module</h4>
+					<%= form_for :course_step, url: admin_course_course_steps_path(@course), method: 'post' do |f| %>
+						<%= f.hidden_field :course_id, value: @course.id %>
+						<%= f.text_field :name, placeholder: 'name'  %>
+						<%= f.text_area :description, placeholder: 'description' %>
+						<%= f.submit 'Create', 'data-disable-with': 'creating...', class: 'btn btn-blue' %>
+					<% end %>
+				</div>
+			</aside>
+			<i class="add fa fa-plus fa-2x" data-dialogue="module-add"></i>
+		</div>
+
+
+		<div class="tab-pane" id="edit<%= @course.id %>">
+			<h4>Edit Course</h4>
+			<%= form_for @course, url: admin_course_path(@course), method: 'put' do |f| %>
+				<%= f.text_field :name, placeholder: 'name' %>
+				<%= f.text_area :description, placeholder: 'description' %>
+				<%= f.submit 'Create', 'data-disable-with': 'saving...', class: 'btn' %>
+			<% end %>
+		</div>
+		<div class="tab-pane" id="users<%= @course.id %>">
+			<table>
+				<thead>
+				<tr><td>Name</td><td>Email</td><td>Completion</td><td>Score</td></tr>
+				</thead>
+				<% @course.enrollments.each do |enrollment| %>
+					<tr>
+						<td><%= enrollment.user.name %></td>
+						<td><%= enrollment.user.email %></td>
+						<td>~</td>
+						<td>~</td>
+					</tr>
+				<% end %>
+			</table>
+
+			<aside class="dialogue" id="user-add">
+				<div>
+					<h4>Enroll a User</h4>
+					<%= form_for :enrollment, url: admin_enrollments_path, method: 'post' do |f| %>
+						<%= f.hidden_field :course_id, value: @course.id %>
+						<%= f.select :user_id, User.all.collect { |u| [u.name, u.id] } %>
+						<%= f.submit 'Create', 'data-disable-with': 'creating...', class: 'btn btn-blue' %>
+					<% end %>
+				</div>
+			</aside>
+			<i class="add fa fa-plus fa-2x" data-dialogue="user-add"></i>
+		</div>
+
+		<div class="tab-pane" id="reqs<%= @course.id %>">
+			<table>
+				<thead>
+				<tr><th>Type</th><th>Name</th><th>Score</th><th>Delete</th></tr>
+				</thead>
+				<% @course.requirements.each do |req| %>
+					<tr>
+						<td><%= req.type %></td>
+						<td><%= req.name %></td>
+						<td><%= link_to raw('&times;'), admin_requirement_path(req), method: :delete %></td>
+					</tr>
+				<% end %>
+			</table>
+
+			<aside class="dialogue" id="reqs-add">
+				<div>
+					<h4>Add a Requirement</h4>
+					<%= form_for :requirement, url: admin_enrollments_path, method: 'post' do |f| %>
+						<%= f.hidden_field :course_id, value: @course.id %>
+						<%= f.select :assignment_id, @course.assignments.collect { |a| [a.name, a.id] } %>
+						<%= f.number_field :score, placeholder: 'Required Score' %>
+						<%= f.submit 'Create', 'data-disable-with': 'creating...', class: 'btn btn-blue' %>
+					<% end %>
+				</div>
+			</aside>
+			<i class="add fa fa-plus fa-2x" data-dialogue="reqs-add"></i>
+		</div>
+
+		<div class="tab-pane" id="assns<%= @course.id %>">
+			<table>
+				<thead>
+				<tr><th>Name</th><th>Delete</th></tr>
+				</thead>
+				<% @course.assignments.each do |assn| %>
+					<tr>
+						<td><%= assn.name %></td>
+						<td><%= link_to raw('&times;'), admin_assignment_path(assn), method: :delete %></td>
+					</tr>
+				<% end %>
+			</table>
+
+			<aside class="dialogue" id="assns-add">
+				<div>
+					<h4>Add an Assignment</h4>
+					<%= form_for :assignment, url: admin_assignments_path, method: 'post' do |f| %>
+						<%= f.hidden_field :course_id, value: @course.id %>
+						<%= f.text_field :name %>
+						<%= f.submit 'Create', 'data-disable-with': 'creating...', class: 'btn btn-blue' %>
+					<% end %>
+				</div>
+			</aside>
+			<i class="add fa fa-plus fa-2x" data-dialogue="assns-add"></i>
+		</div>
+
 	</div>
-<% end %>
-<div>
-	<%= form_for :course_step, url: admin_course_course_steps_path(@course), method: 'post' do |f| %>
-		<%= f.hidden_field :course_id, value: @course.id %>
-		<%= f.text_field :name, placeholder: 'name'  %>
-		<%= f.text_area :description, placeholder: 'description' %>
-		<%= f.submit 'Create', 'data-disable-with': 'creating...' %>
-	<% end %>
-</div>
+</main>
+
+<script>
+	var initCals = function() {
+		<% Course.all.each do |course| %>
+		$('#cal<%= course.id %>').fullCalendar({})
+		<% end %>
+	}
+
+	var renderCals = function() {
+		<% Course.all.each do |course| %>
+		$('#cal<%= course.id %>').fullCalendar('render')
+		<% end %>
+	}
+
+	document.addEventListener('tab-changed', function(){
+		renderCals()
+	})
+	$(document).ready(function() {
+		initCals()
+	});
+</script>

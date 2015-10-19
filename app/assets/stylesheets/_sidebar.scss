@@ -1,0 +1,47 @@
+*, *:after, *:before {  -webkit-box-sizing: border-box;  -moz-box-sizing: border-box;  box-sizing: border-box;  }
+body {  margin: 0; }
+
+#sidebar-left {
+  overflow: hidden; text-align: center;
+  background-color: $sidebarBackground; width: 0; height: 100%; float: left; transition: width 0.2s;
+  a { width: 100%; padding: 15px 15px; display: block; transition: all 0.2s; color: $sidebarLinkColor }
+  li:hover { background-color: $sidebarLinkHover }
+  ul { list-style-type: none; margin: 0; padding: 0 }
+  li { list-style-type: none; display: block; margin: 0; padding: 0 }
+  position: fixed; top: 45px;
+  li.active { background-color: $sidebarLinkHover }
+}
+#sidebar-left.open { width: 50px; }
+
+#sidebar-right {
+  overflow: hidden; text-align: center;
+  background-color: rgba(250, 250, 250, 0.9); width: 0; height: 100%; float: left; transition: width 0.2s;
+  position: fixed; top: 45px; right: 0; z-index: 1000;
+}
+#sidebar-right.open { width: 300px; }
+
+#page-wrap { width: 100%; transition: all 0.2s; padding-top: 45px; }
+#page-wrap.left-open  { padding-left: 50px }
+
+
+#help {
+  overflow: hidden;
+  width: 100%; height: 0; transition: all 0.5s; z-index: 200;
+  background-color: rgba(245,255,255,0.9);  right: 0; position: fixed; top: 45px;
+}
+#help.open { height: 100% }
+
+
+// Mobile devices
+@media screen and (max-width: $small) {
+  #page-wrap.right-open { padding-right: 0 }
+}
+
+@media screen and (max-width: $medium) and (min-width: $small + 1px) {
+  #page-wrap.right-open { padding-right: 0 }
+
+}
+
+@media screen and (min-width: $medium + 1px) {
+  #page-wrap.right-open { padding-right: 300px }
+}

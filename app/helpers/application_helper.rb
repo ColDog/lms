@@ -1,4 +1,15 @@
 module ApplicationHelper
+
+  def add_active(controller, action)
+    if controller == params[:controller] && action == params[:action]
+      'active'
+    end
+  end
+
+  def icon(name, size=1)
+    raw "<i class=\"fa fa-#{name} fa-#{size}x\"></i>"
+  end
+
   def edit_employees?
     current_user.role.super_user || current_user.role.can_edit_employees
   end

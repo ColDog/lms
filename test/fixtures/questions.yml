@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: MyText
+  options: MyText
+  correct: MyText
+  learning_object_id: 
+  order: 1
+  computer_marked: false
+  user_marked: false
+
+two:
+  question: MyText
+  options: MyText
+  correct: MyText
+  learning_object_id: 
+  order: 1
+  computer_marked: false
+  user_marked: false

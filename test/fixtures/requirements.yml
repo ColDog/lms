@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  markable_id: 
+  markable_type: Markable
+  course_id: 
+  score: 9.99
+
+two:
+  markable_id: 
+  markable_type: Markable
+  course_id: 
+  score: 9.99

@@ -1,4 +1,12 @@
-<div class="row">
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+	<li><%= link_to 'Admin', admin_dashboard_path %></li>
+	<li>Settings</li>
+</ul>
+
+
+<row>
+
 	<div class="c3 col">
 		<ul class="tabs vertical">
 			<li class="selected" data-target="#branding">Branding</li>
@@ -8,8 +16,9 @@
 			<li class="" data-target="#reports">My Reports</li>
 		</ul>
 	</div>
+
 	<div class="c9 col">
-		<div class="tab-panes">
+		<div class="tab-panes vertical">
 			<div class="tab-pane selected" id="branding">
 				<%= form_for @setup, url: admin_setup_path(@setup), method: 'put', remote: true do |f| %>
 					<%= f.text_field :name, placeholder: 'name' %>
@@ -29,7 +38,7 @@
 						</ul>
 					</div>
 					<div class="col c9">
-						<div class="tab-panes">
+						<div class="tab-panes vertical">
 							<div class="tab-pane selected" id="groupnew">
 								<%= form_for :group, url: admin_groups_path, method: 'post' do |f| %>
 									<%= f.text_field :name, placeholder: 'name' %>
@@ -75,48 +84,80 @@
 				</div>
 			</div>
 			<div class="tab-pane" id="security">
+				<div class="col c3">
+					<ul class="tabs vertical">
+						<li class="selected" data-target="#rolenew">New Role</li>
+						<% Role.all.each do |role| %>
+							<li class="" data-target="#role<%= role.id %>"><%= role.name %></li>
+						<% end %>
+					</ul>
+				</div>
+				<div class="col c9">
+					<div class="tab-panes vertical">
+						<div class="tab-pane selected" id="rolenew">
+							<h4>New Role</h4>
+							<%= form_for :role, url: admin_roles_path, method: 'post' do |f| %>
+								<%= f.text_field :name, placeholder: 'name' %>
 
-				<% Role.all.each do |role| %>
-					<h4><%= role.name %></h4>
-					<%= form_for role, url: admin_role_path(role), method: 'put' do |f| %>
-						<%= f.text_field :name, placeholder: 'name' %>
-						<%= f.label 'Super User' %>
-						<%= f.check_box :super_user %>
+								<label>
+									<%= f.check_box :super_user %>
+									Super User
+								</label>
+								<label>
+									<%= f.check_box :can_edit_employees %>
+									Is able to edit their own employees
+								</label>
 
-						<%= f.label 'Is able to edit their own employees' %>
-						<%= f.check_box :can_edit_employees %>
+								<label>
+									<%= f.check_box :can_edit_own %>
+									Can edit their own profile
+								</label>
 
-						<%= f.label 'Is able to edit their own profile' %>
-						<%= f.check_box :can_edit_own %>
+								<label>
+									<%= f.check_box :can_create_content %>
+									Can create content
+								</label>
 
-						<%= f.label 'Is able to create content' %>
-						<%= f.check_box :can_create_content %>
+								<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+							<% end %>
+						</div>
+						<% Role.all.each do |role| %>
+							<div class="tab-pane" id="role<%= role.id %>">
+								<h4><%= role.name %></h4>
+								<%= form_for role, url: admin_role_path(role), method: 'put' do |f| %>
+									<%= f.text_field :name, placeholder: 'name' %>
 
-						<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
-					<% end %>
-				<% end %>
+									<label>
+										<%= f.check_box :super_user %>
+										Super User
+									</label>
+									<label>
+										<%= f.check_box :can_edit_employees %>
+										Is able to edit their own employees
+									</label>
 
-				<h4>New Role</h4>
-				<%= form_for :role, url: admin_roles_path, method: 'post' do |f| %>
-					<%= f.text_field :name, placeholder: 'name' %>
-					<%= f.label 'Super User' %>
-					<%= f.check_box :super_user %>
+									<label>
+										<%= f.check_box :can_edit_own %>
+										Can edit their own profile
+									</label>
 
-					<%= f.label 'Is able to edit their own employees' %>
-					<%= f.check_box :can_edit_employees %>
+									<label>
+										<%= f.check_box :can_create_content %>
+										Can create content
+									</label>
 
-					<%= f.label 'Is able to edit their own profile' %>
-					<%= f.check_box :can_edit_own %>
 
-					<%= f.label 'Is able to create content' %>
-					<%= f.check_box :can_create_content %>
+									<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
+								<% end %>
+							</div>
+						<% end %>
+					</div>
 
-					<%= f.submit 'Save', 'data-disable-with': 'saving...' %>
-				<% end %>
+				</div>
 
 			</div>
 			<div class="tab-pane" id="dashboard">Hi</div>
 			<div class="tab-pane" id="reports">Hi</div>
 		</div>
 	</div>
-</div>
+</row>

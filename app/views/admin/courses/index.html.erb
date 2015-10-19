@@ -1,0 +1,32 @@
+<ul class="breadcrumbs">
+	<li><%= link_to icon('home'), root_path %></li>
+	<li><%= link_to 'Admin', admin_dashboard_path %></li>
+	<li>Courses</li>
+</ul>
+
+
+<main class="container">
+	<h1>All Courses</h1>
+
+	<div class="row">
+		<div class="c8">
+			<table>
+				<thead>
+				<tr><th>Name</th><th>Enrolled</th><th>Completion</th><th>Scores</th><th>Stats</th></tr>
+				</thead>
+				<% @courses.each do |course| %>
+					<tr>
+						<td><%= link_to course.name, admin_course_path(course) %></td>
+						<td><%= course.enrollments.count %></td>
+						<td><%= course.completion %></td>
+						<td><%= nil %></td>
+						<td><%= icon('area-chart') %></td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+		<div class="c4">
+
+		</div>
+	</div>
+</main>
