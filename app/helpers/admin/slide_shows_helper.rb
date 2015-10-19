@@ -1,0 +1,2 @@
+module Admin::SlideShowsHelper
+end

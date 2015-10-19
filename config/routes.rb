@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
 
+  namespace :admin do
+  get 'videos/show'
+  end
+
+  namespace :admin do
+  get 'slide_shows/show'
+  end
+
+  namespace :admin do
+  get 'articles/show'
+  end
+
   get 'course_steps/show'
 
   root to: 'home#index'

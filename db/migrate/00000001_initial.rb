@@ -13,7 +13,7 @@ class Initial < ActiveRecord::Migration
     create_table :pictures do |t|
       t.string :src
       t.string :name
-      t.references :imageable, polymorphic: true, index: true, null: false, foreign_key: true
+      t.references :imageable, polymorphic: true, index: true, null: false
 
       t.timestamps null: false
     end
@@ -89,17 +89,6 @@ class Initial < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    create_table :learning_objects do |t|
-      t.string :name, null: false
-      t.text :description
-      t.text :content
-      t.string :category
-      t.references :course_step, foreign_key: true, index: true
-      t.integer :order
-
-      t.timestamps null: false
-    end
-
     create_table :assignments do |t|
       t.references :course, index: true, foreign_key: true
       t.string :name
@@ -136,10 +125,11 @@ class Initial < ActiveRecord::Migration
       t.timestamps null: false
     end
 
+    # LEARNING OBJECTS
     create_table :videos do |t|
       t.string :source
       t.integer :order
-      t.references :learning_object, index: true, foreign_key: true, null: false
+      t.references :course_step, index: true, foreign_key: true, null: false
 
       t.timestamps null: false
     end
@@ -147,10 +137,21 @@ class Initial < ActiveRecord::Migration
     create_table :slide_shows do |t|
       t.string :source
       t.integer :order
-      t.references :learning_object, index: true, foreign_key: true, null: false
+      t.references :course_step, index: true, foreign_key: true, null: false
 
       t.timestamps null: false
     end
+
+    create_table :articles do |t|
+      t.string :name
+      t.text :content
+      t.references :course_step, index: true, foreign_key: true, null: false
+      t.integer :order
+
+      t.timestamps null: false
+    end
+
+
 
     create_table :certifications do |t|
       t.references :course, index: true, foreign_key: true, null: false

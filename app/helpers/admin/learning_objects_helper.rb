@@ -1,2 +1,0 @@
-module Admin::LearningObjectsHelper
-end

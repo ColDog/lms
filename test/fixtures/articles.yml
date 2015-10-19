@@ -2,10 +2,12 @@
 
 one:
   name: MyString
-  description: MyText
-  fields: 
+  content: MyText
+  course_step_id: 
+  order: 1
 
 two:
   name: MyString
-  description: MyText
-  fields: 
+  content: MyText
+  course_step_id: 
+  order: 1

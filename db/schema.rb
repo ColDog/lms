@@ -30,6 +30,17 @@ ActiveRecord::Schema.define(version: 1) do
   add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
   add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
 
+  create_table "articles", force: :cascade do |t|
+    t.string   "name"
+    t.text     "content"
+    t.integer  "course_step_id", null: false
+    t.integer  "order"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "articles", ["course_step_id"], name: "index_articles_on_course_step_id", using: :btree
+
   create_table "assignments", force: :cascade do |t|
     t.integer  "course_id"
     t.string   "name"
@@ -118,19 +129,6 @@ ActiveRecord::Schema.define(version: 1) do
 
   add_index "groups", ["role_id"], name: "index_groups_on_role_id", using: :btree
 
-  create_table "learning_objects", force: :cascade do |t|
-    t.string   "name",           null: false
-    t.text     "description"
-    t.text     "content"
-    t.string   "category"
-    t.integer  "course_step_id"
-    t.integer  "order"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  add_index "learning_objects", ["course_step_id"], name: "index_learning_objects_on_course_step_id", using: :btree
-
   create_table "participants", force: :cascade do |t|
     t.integer  "course_step_id", null: false
     t.integer  "user_id",        null: false
@@ -140,6 +138,17 @@ ActiveRecord::Schema.define(version: 1) do
 
   add_index "participants", ["course_step_id"], name: "index_participants_on_course_step_id", using: :btree
   add_index "participants", ["user_id"], name: "index_participants_on_user_id", using: :btree
+
+  create_table "pictures", force: :cascade do |t|
+    t.string   "src"
+    t.string   "name"
+    t.integer  "imageable_id",   null: false
+    t.string   "imageable_type", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "pictures", ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable_type_and_imageable_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.integer  "assignment_id",                   null: false
@@ -162,6 +171,7 @@ ActiveRecord::Schema.define(version: 1) do
     t.integer  "schedule_id"
     t.integer  "assignment_id"
     t.decimal  "score"
+    t.decimal  "weight"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
@@ -202,12 +212,12 @@ ActiveRecord::Schema.define(version: 1) do
   create_table "slide_shows", force: :cascade do |t|
     t.string   "source"
     t.integer  "order"
-    t.integer  "learning_object_id", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.integer  "course_step_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  add_index "slide_shows", ["learning_object_id"], name: "index_slide_shows_on_learning_object_id", using: :btree
+  add_index "slide_shows", ["course_step_id"], name: "index_slide_shows_on_course_step_id", using: :btree
 
   create_table "user_fields", force: :cascade do |t|
     t.integer  "field_id",   null: false
@@ -257,15 +267,16 @@ ActiveRecord::Schema.define(version: 1) do
   create_table "videos", force: :cascade do |t|
     t.string   "source"
     t.integer  "order"
-    t.integer  "learning_object_id", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.integer  "course_step_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  add_index "videos", ["learning_object_id"], name: "index_videos_on_learning_object_id", using: :btree
+  add_index "videos", ["course_step_id"], name: "index_videos_on_course_step_id", using: :btree
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
+  add_foreign_key "articles", "course_steps"
   add_foreign_key "assignments", "courses"
   add_foreign_key "attendances", "schedules"
   add_foreign_key "attendances", "users"
@@ -276,7 +287,6 @@ ActiveRecord::Schema.define(version: 1) do
   add_foreign_key "enrollments", "users"
   add_foreign_key "fields", "groups"
   add_foreign_key "groups", "roles"
-  add_foreign_key "learning_objects", "course_steps"
   add_foreign_key "participants", "course_steps"
   add_foreign_key "participants", "users"
   add_foreign_key "questions", "assignments"
@@ -284,11 +294,11 @@ ActiveRecord::Schema.define(version: 1) do
   add_foreign_key "requirements", "courses"
   add_foreign_key "requirements", "schedules"
   add_foreign_key "schedules", "course_steps"
-  add_foreign_key "slide_shows", "learning_objects"
+  add_foreign_key "slide_shows", "course_steps"
   add_foreign_key "user_fields", "fields"
   add_foreign_key "user_fields", "users"
   add_foreign_key "user_groups", "groups"
   add_foreign_key "user_groups", "users"
   add_foreign_key "users", "roles"
-  add_foreign_key "videos", "learning_objects"
+  add_foreign_key "videos", "course_steps"
 end
